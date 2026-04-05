@@ -9,6 +9,13 @@ const voterSchema = new Schema(
       required: true,
       trim: true,
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,
@@ -48,11 +55,11 @@ voterSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-voterSchema.method.isPasswordCorrect = async function (password) {
-  return await bcrypt.compare(this.password, password);
+voterSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
-voterSchema.method.generateAccessToken = function () {
+voterSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -60,19 +67,19 @@ voterSchema.method.generateAccessToken = function () {
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: ACCESS_TOKEN_EXPIRY,
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     },
   );
 };
 
-voterSchema.method.generateRefreshToken = function () {
+voterSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: REFRESH_TOKEN_EXPIRY,
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     },
   );
 };
