@@ -152,4 +152,5 @@ export {
   getPollingStationsByConstituency,
   deletePollingStation,
   updatePollingStation,
+  getPollingStationById,
 };
