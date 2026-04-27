@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatdaanSetu — Your Voice, Your Vote</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #0f0e0c;
+            --paper: #f5f0e8;
+            --saffron: #e8650a;
+            --saffron-light: #f7b26a;
+            --green: #1a6b3c;
+            --green-light: #d4ede0;
+            --navy: #1a2340;
+            --muted: #7a7060;
+            --border: #d8d0c0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 4rem;
+            background: rgba(245, 240, 232, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: var(--saffron);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--ink);
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .btn-outline:hover {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .btn-solid {
+            border: 1.5px solid var(--saffron);
+            background: var(--saffron);
+            color: white;
+        }
+
+        .btn-solid:hover {
+            background: #c45508;
+            border-color: #c45508;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6rem 4rem 6rem 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--saffron);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero-tag::before {
+            content: '';
+            display: inline-block;
+            width: 2rem;
+            height: 1.5px;
+            background: var(--saffron);
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 5vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.4s forwards;
+        }
+
+        .hero-title .accent {
+            color: var(--saffron);
+            font-style: italic;
+        }
+
+        .hero-title .green {
+            color: var(--green);
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 480px;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.6s forwards;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.8s forwards;
+        }
+
+        .btn-hero {
+            padding: 0.9rem 2rem;
+            font-size: 1rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1s forwards;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 0.25rem;
+        }
+
+        /* HERO RIGHT */
+        .hero-right {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--navy);
+            overflow: hidden;
+        }
+
+        .hero-right::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 30% 50%, rgba(232, 101, 10, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(26, 107, 60, 0.15) 0%, transparent 50%);
+        }
+
+        .hero-illustration {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 4rem;
+            opacity: 0;
+            animation: fadeIn 1.2s ease 0.6s forwards;
+        }
+
+        .ballot-box {
+            width: 200px;
+            height: 220px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .ballot-box svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 20px 60px rgba(232, 101, 10, 0.3));
+        }
+
+        .floating-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: absolute;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .float-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.875rem 1.25rem;
+            backdrop-filter: blur(8px);
+            text-align: left;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .float-card:nth-child(2) {
+            animation-delay: -2s;
+        }
+
+        .float-card:nth-child(3) {
+            animation-delay: -1s;
+        }
+
+        .float-card-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.25rem;
+        }
+
+        .float-card-value {
+            font-size: 0.95rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .float-card-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--saffron);
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .hero-quote {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+            font-style: italic;
+            line-height: 1.6;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        /* TRICOLOR STRIPE */
+        .tricolor {
+            height: 5px;
+            background: linear-gradient(to right, #FF9933 33.33%, white 33.33% 66.66%, #138808 66.66%);
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 7rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--saffron);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            max-width: 3rem;
+            height: 1px;
+            background: var(--saffron);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            max-width: 500px;
+        }
+
+        .section-sub {
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 480px;
+            margin-bottom: 4rem;
+            font-weight: 300;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: var(--border);
+        }
+
+        .feature-card {
+            background: var(--paper);
+            padding: 2.5rem;
+            transition: background 0.3s;
+            cursor: default;
+        }
+
+        .feature-card:hover {
+            background: var(--ink);
+        }
+
+        .feature-card:hover .feat-title {
+            color: white;
+        }
+
+        .feature-card:hover .feat-desc {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .feature-card:hover .feat-icon {
+            background: var(--saffron);
+            color: white;
+        }
+
+        .feat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 4px;
+            background: var(--green-light);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .feat-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            transition: color 0.3s;
+        }
+
+        .feat-desc {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.7;
+            font-weight: 300;
+            transition: color 0.3s;
+        }
+
+        /* HOW IT WORKS */
+        .how {
+            padding: 7rem 4rem;
+            background: var(--navy);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .how::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232, 101, 10, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .how-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .how .section-label {
+            color: var(--saffron-light);
+        }
+
+        .how .section-label::after {
+            background: var(--saffron-light);
+        }
+
+        .how .section-title {
+            color: white;
+        }
+
+        .how .section-sub {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 12%;
+            right: 12%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-num {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(232, 101, 10, 0.15);
+            border: 1.5px solid var(--saffron);
+            color: var(--saffron);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 7rem 4rem;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-section .section-label {
+            justify-content: center;
+        }
+
+        .cta-section .section-label::after {
+            display: none;
+        }
+
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-title .accent {
+            color: var(--saffron);
+            font-style: italic;
+        }
+
+        .cta-sub {
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            border-radius: 2px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--ink);
+            color: rgba(255, 255, 255, 0.4);
+            padding: 3rem 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .footer-logo span {
+            color: var(--saffron);
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* SCROLL REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="nav-logo">Matdaan<span>Setu</span></a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how">How it Works</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <div class="nav-cta">
+            <a href="login.html" class="btn btn-outline">Login</a>
+            <a href="register.html" class="btn btn-solid">Register to Vote</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-tag">India's Digital Voter Platform</div>
+            <h1 class="hero-title">
+                Your <span class="accent">Vote</span> Finds Its <span class="green">Way</span> Home
+            </h1>
+            <p class="hero-sub">
+                MatdaanSetu connects every eligible voter to their polling booth, their candidates, and the knowledge
+                they need to participate with confidence.
+            </p>
+            <div class="hero-actions">
+                <a href="register.html" class="btn btn-solid btn-hero">Register Now</a>
+                <a href="#how" class="btn btn-outline btn-hero">See How It Works</a>
+            </div>
+            <div class="hero-stats">
+                <div>
+                    <div class="stat-num">28+</div>
+                    <div class="stat-label">States Covered</div>
+                </div>
+                <div>
+                    <div class="stat-num">900M+</div>
+                    <div class="stat-label">Eligible Voters</div>
+                </div>
+                <div>
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Free to Use</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-illustration">
+                <div class="ballot-box">
+                    <svg viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Box body -->
+                        <rect x="20" y="80" width="160" height="120" rx="6" fill="#1e2d4a"
+                            stroke="rgba(255,255,255,0.1)" stroke-width="1.5" />
+                        <!-- Box lid -->
+                        <rect x="10" y="60" width="180" height="28" rx="4" fill="#253560"
+                            stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+                        <!-- Slot -->
+                        <rect x="80" y="68" width="40" height="6" rx="3" fill="#0f0e0c" />
+                        <!-- Ballot paper going in -->
+                        <rect x="88" y="30" width="24" height="45" rx="2" fill="white" opacity="0.9" />
+                        <line x1="93" y1="38" x2="107" y2="38" stroke="#ddd" stroke-width="1.5" />
+                        <line x1="93" y1="44" x2="107" y2="44" stroke="#ddd" stroke-width="1.5" />
+                        <circle cx="95" cy="52" r="3" fill="#e8650a" />
+                        <line x1="99" y1="52" x2="107" y2="52" stroke="#ddd" stroke-width="1.5" />
+                        <!-- Ashoka wheel on box -->
+                        <circle cx="100" cy="145" r="22" stroke="rgba(232,101,10,0.4)" stroke-width="1" />
+                        <circle cx="100" cy="145" r="4" fill="rgba(232,101,10,0.6)" />
+                        <line x1="100" y1="123" x2="100" y2="167" stroke="rgba(232,101,10,0.3)" stroke-width="1" />
+                        <line x1="78" y1="145" x2="122" y2="145" stroke="rgba(232,101,10,0.3)" stroke-width="1" />
+                        <line x1="84.5" y1="129.5" x2="115.5" y2="160.5" stroke="rgba(232,101,10,0.3)"
+                            stroke-width="1" />
+                        <line x1="115.5" y1="129.5" x2="84.5" y2="160.5" stroke="rgba(232,101,10,0.3)"
+                            stroke-width="1" />
+                    </svg>
+                </div>
+                <p class="hero-quote">"Democracy is not just the right to vote, it is the right to live in dignity."</p>
+            </div>
+
+            <div class="floating-cards">
+                <div class="float-card">
+                    <div class="float-card-label">Your Booth</div>
+                    <div class="float-card-value"><span class="float-card-dot"></span>Govt. School, Sector 14</div>
+                </div>
+                <div class="float-card">
+                    <div class="float-card-label">Constituency</div>
+                    <div class="float-card-value"><span class="float-card-dot"></span>Chandigarh North</div>
+                </div>
+                <div class="float-card">
+                    <div class="float-card-label">Candidates</div>
+                    <div class="float-card-value"><span class="float-card-dot"></span>4 Registered</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="tricolor"></div>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="reveal">
+            <div class="section-label">What We Offer</div>
+            <h2 class="section-title">Everything a Voter Needs, in One Place</h2>
+            <p class="section-sub">From finding your polling booth to understanding the candidates — we make
+                participation simple.</p>
+        </div>
+        <div class="features-grid reveal">
+            <div class="feature-card">
+                <div class="feat-icon">📍</div>
+                <div class="feat-title">Find Your Polling Booth</div>
+                <p class="feat-desc">Enter your details and instantly locate your assigned polling station with address
+                    and directions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feat-icon">👥</div>
+                <div class="feat-title">Know Your Candidates</div>
+                <p class="feat-desc">View detailed profiles of candidates contesting from your constituency — their
+                    party, background, and promises.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feat-icon">📚</div>
+                <div class="feat-title">Voter Education</div>
+                <p class="feat-desc">Access curated educational content about the voting process, your rights, and how
+                    democracy works.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feat-icon">🔐</div>
+                <div class="feat-title">Secure Registration</div>
+                <p class="feat-desc">Your data is protected with industry-standard encryption. Register once, access
+                    everything safely.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feat-icon">🗺️</div>
+                <div class="feat-title">Constituency Info</div>
+                <p class="feat-desc">Get complete information about your constituency — boundaries, representatives, and
+                    historical data.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feat-icon">📱</div>
+                <div class="feat-title">Works Everywhere</div>
+                <p class="feat-desc">Accessible on any device — phone, tablet, or desktop. No app download required.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="how">
+        <div class="how-inner">
+            <div class="reveal">
+                <div class="section-label">The Process</div>
+                <h2 class="section-title">Simple Steps to Participate</h2>
+                <p class="section-sub">Get started in minutes and be prepared on election day.</p>
+            </div>
+            <div class="steps reveal">
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <div class="step-title">Register</div>
+                    <p class="step-desc">Create your voter account with basic details and your constituency information.
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <div class="step-title">Find Your Booth</div>
+                    <p class="step-desc">Instantly see your assigned polling station with full address details.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <div class="step-title">Learn & Decide</div>
+                    <p class="step-desc">Explore candidate profiles and educational resources to make an informed
+                        choice.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">04</div>
+                    <div class="step-title">Vote with Confidence</div>
+                    <p class="step-desc">Walk into your polling booth prepared and exercise your democratic right.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="about">
+        <div class="reveal">
+            <div class="section-label">Get Started Today</div>
+            <h2 class="cta-title">Ready to make your <span class="accent">voice heard?</span></h2>
+            <p class="cta-sub">Join thousands of voters already using MatdaanSetu to navigate the electoral process with
+                ease and confidence.</p>
+            <div class="cta-buttons">
+                <a href="register.html" class="btn btn-solid btn-large">Register as Voter</a>
+                <a href="login.html" class="btn btn-outline btn-large">Already Registered</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">Matdaan<span>Setu</span></div>
+        <div>Built for India's Democracy &nbsp;·&nbsp; A College Project</div>
+        <div>© 2025 MatdaanSetu</div>
+    </footer>
+
+    <script>
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible')
+                    observer.unobserve(e.target)
+                }
+            })
+        }, { threshold: 0.1 })
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — MatdaanSetu</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #0f0e0c;
+            --paper: #f5f0e8;
+            --saffron: #e8650a;
+            --saffron-light: #f7b26a;
+            --green: #1a6b3c;
+            --green-light: #d4ede0;
+            --navy: #1a2340;
+            --muted: #7a7060;
+            --border: #d8d0c0;
+            --error: #c0392b;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* LEFT PANEL */
+        .left-panel {
+            background: var(--navy);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3rem;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232, 101, 10, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(26, 107, 60, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .panel-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: white;
+            text-decoration: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .panel-logo span {
+            color: var(--saffron);
+        }
+
+        .panel-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .panel-tag {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--saffron-light);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .panel-tag::before {
+            content: '';
+            width: 2rem;
+            height: 1.5px;
+            background: var(--saffron-light);
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.75rem;
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.25rem;
+        }
+
+        .panel-title .accent {
+            color: var(--saffron);
+            font-style: italic;
+        }
+
+        .panel-desc {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            font-weight: 300;
+            max-width: 360px;
+            margin-bottom: 3rem;
+        }
+
+        /* QUOTE CARD */
+        .quote-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.75);
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .quote-author {
+            font-size: 0.8rem;
+            color: var(--saffron-light);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        /* STATS ROW */
+        .stats-row {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat {
+            border-left: 2px solid rgba(232, 101, 10, 0.4);
+            padding-left: 1rem;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 0.2rem;
+        }
+
+        .panel-footer {
+            position: relative;
+            z-index: 2;
+        }
+
+        .tricolor-bar {
+            height: 3px;
+            background: linear-gradient(to right, #FF9933 33.33%, white 33.33% 66.66%, #138808 66.66%);
+            margin-bottom: 1rem;
+            border-radius: 2px;
+        }
+
+        .panel-footer p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* RIGHT — LOGIN FORM */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4.5rem;
+        }
+
+        .form-header {
+            margin-bottom: 2.5rem;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--ink);
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-sub {
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+
+        .form-sub a {
+            color: var(--saffron);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-sub a:hover {
+            text-decoration: underline;
+        }
+
+        /* TAB TOGGLE */
+        .login-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            border: 1.5px solid var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            animation: fadeUp 0.6s ease 0.1s both;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.7rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        .tab-btn.active {
+            background: var(--ink);
+            color: white;
+        }
+
+        /* FORM */
+        .login-form {
+            animation: fadeUp 0.6s ease 0.2s both;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 2px;
+            background: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            color: var(--ink);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--saffron);
+            box-shadow: 0 0 0 3px rgba(232, 101, 10, 0.08);
+        }
+
+        input.error {
+            border-color: var(--error);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 0.85rem;
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: var(--ink);
+        }
+
+        .field-error {
+            font-size: 0.75rem;
+            color: var(--error);
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .field-error.show {
+            display: block;
+        }
+
+        .form-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+            margin-top: -0.25rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--saffron);
+            cursor: pointer;
+        }
+
+        .remember-me span {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .forgot-link {
+            font-size: 0.85rem;
+            color: var(--saffron);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ERROR BANNER */
+        .error-banner {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 2px;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.875rem;
+            color: var(--error);
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-banner.show {
+            display: flex;
+        }
+
+        /* SUBMIT BTN */
+        .btn-submit {
+            width: 100%;
+            padding: 0.95rem;
+            border: 1.5px solid var(--saffron);
+            background: var(--saffron);
+            color: white;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-submit:hover {
+            background: #c45508;
+            border-color: #c45508;
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        /* ADMIN LOGIN TOGGLE */
+        .admin-toggle {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            animation: fadeUp 0.6s ease 0.3s both;
+        }
+
+        .admin-toggle p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-admin {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.5rem;
+            border: 1.5px solid var(--navy);
+            border-radius: 2px;
+            background: transparent;
+            color: var(--navy);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-admin:hover {
+            background: var(--navy);
+            color: white;
+        }
+
+        /* ADMIN LOGIN FORM */
+        .admin-form {
+            display: none;
+            animation: fadeUp 0.4s ease forwards;
+        }
+
+        .admin-form.show {
+            display: block;
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(26, 35, 64, 0.08);
+            color: var(--navy);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        /* SUCCESS */
+        .success-banner {
+            background: var(--green-light);
+            border: 1px solid rgba(26, 107, 60, 0.2);
+            border-radius: 2px;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.875rem;
+            color: var(--green);
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .success-banner.show {
+            display: flex;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <a href="index.html" class="panel-logo">Matdaan<span>Setu</span></a>
+
+        <div class="panel-content">
+            <div class="panel-tag">Welcome Back</div>
+            <h2 class="panel-title">Your <span class="accent">Vote</span> is Waiting</h2>
+            <p class="panel-desc">Login to access your polling booth location, candidate information, and voter
+                education resources.</p>
+
+            <div class="quote-card">
+                <p class="quote-text">"The ballot is stronger than the bullet."</p>
+                <div class="quote-author">— Abraham Lincoln</div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-num">28+</div>
+                    <div class="stat-label">States</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">900M+</div>
+                    <div class="stat-label">Eligible Voters</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Secure</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <div class="tricolor-bar"></div>
+            <p>Jai Hind · Jai Bharat · Jai Loktantra</p>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <a href="index.html" class="back-link">← Back to Home</a>
+
+        <div class="form-header">
+            <h1 class="form-title">Login to Your Account</h1>
+            <p class="form-sub">New here? <a href="register.html">Create a voter account</a></p>
+        </div>
+
+        <!-- TAB TOGGLE -->
+        <div class="login-tabs">
+            <button class="tab-btn active" onclick="switchTab('voter')">Voter Login</button>
+            <button class="tab-btn" onclick="switchTab('admin')">Admin Login</button>
+        </div>
+
+        <!-- ERROR BANNER -->
+        <div class="error-banner" id="error-banner">
+            <span>⚠</span>
+            <span id="error-msg">Invalid credentials. Please try again.</span>
+        </div>
+
+        <!-- SUCCESS BANNER -->
+        <div class="success-banner" id="success-banner">
+            <span>✓</span>
+            <span>Login successful! Redirecting...</span>
+        </div>
+
+        <!-- VOTER LOGIN -->
+        <div class="login-form" id="voter-form">
+            <div class="form-group">
+                <label for="identifier">Username or Email</label>
+                <input type="text" id="identifier" placeholder="Enter your username or email" autocomplete="username">
+                <div class="field-error" id="err-identifier">Please enter your username or email</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                    <input type="password" id="password" placeholder="Enter your password"
+                        autocomplete="current-password">
+                    <span class="toggle-password" onclick="togglePass('password', this)">Show</span>
+                </div>
+                <div class="field-error" id="err-password">Please enter your password</div>
+            </div>
+            <div class="form-meta">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+            <button class="btn-submit" id="voter-submit" onclick="loginVoter()">
+                <div class="spinner" id="voter-spinner"></div>
+                <span id="voter-btn-text">Login as Voter</span>
+            </button>
+        </div>
+
+        <!-- ADMIN LOGIN -->
+        <div class="admin-form" id="admin-form">
+            <div class="admin-badge">🛡 Admin Access</div>
+            <div class="form-group">
+                <label for="admin-username">Admin Username</label>
+                <input type="text" id="admin-username" placeholder="Enter admin username" autocomplete="username">
+                <div class="field-error" id="err-admin-username">Please enter admin username</div>
+            </div>
+            <div class="form-group">
+                <label for="admin-password">Password</label>
+                <div class="input-wrap">
+                    <input type="password" id="admin-password" placeholder="Enter admin password"
+                        autocomplete="current-password">
+                    <span class="toggle-password" onclick="togglePass('admin-password', this)">Show</span>
+                </div>
+                <div class="field-error" id="err-admin-password">Please enter your password</div>
+            </div>
+            <div class="form-meta">
+                <div></div>
+                <a href="#" class="forgot-link">Need help?</a>
+            </div>
+            <button class="btn-submit" id="admin-submit" onclick="loginAdmin()">
+                <div class="spinner" id="admin-spinner"></div>
+                <span id="admin-btn-text">Login as Admin</span>
+            </button>
+        </div>
+
+        <div class="admin-toggle" id="register-hint">
+            <p>Don't have an account yet?</p>
+            <a href="register.html" class="btn-admin">Register as Voter →</a>
+        </div>
+    </div>
+
+    <script>
+        let activeTab = 'voter';
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach((b, i) => {
+                b.classList.toggle('active', (i === 0 && tab === 'voter') || (i === 1 && tab === 'admin'));
+            });
+            document.getElementById('voter-form').style.display = tab === 'voter' ? 'block' : 'none';
+            document.getElementById('admin-form').style.display = tab === 'admin' ? 'block' : 'none';
+            document.getElementById('register-hint').style.display = tab === 'voter' ? 'block' : 'none';
+            hideMessages();
+        }
+
+        function togglePass(id, el) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') {
+                input.type = 'text';
+                el.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                el.textContent = 'Show';
+            }
+        }
+
+        function showError(field, show) {
+            const input = document.getElementById(field);
+            const err = document.getElementById(`err-${field}`);
+            if (!input || !err) return;
+            input.classList.toggle('error', show);
+            err.classList.toggle('show', show);
+        }
+
+        function hideMessages() {
+            document.getElementById('error-banner').classList.remove('show');
+            document.getElementById('success-banner').classList.remove('show');
+        }
+
+        function showErrorBanner(msg) {
+            const banner = document.getElementById('error-banner');
+            document.getElementById('error-msg').textContent = msg;
+            banner.classList.add('show');
+            document.getElementById('success-banner').classList.remove('show');
+        }
+
+        function showSuccessBanner() {
+            document.getElementById('success-banner').classList.add('show');
+            document.getElementById('error-banner').classList.remove('show');
+        }
+
+        function setLoading(type, loading) {
+            const btn = document.getElementById(`${type}-submit`);
+            const spinner = document.getElementById(`${type}-spinner`);
+            const text = document.getElementById(`${type}-btn-text`);
+            btn.disabled = loading;
+            spinner.style.display = loading ? 'block' : 'none';
+            text.textContent = loading
+                ? 'Logging in...'
+                : type === 'voter' ? 'Login as Voter' : 'Login as Admin';
+        }
+
+        async function loginVoter() {
+            const identifier = document.getElementById('identifier').value.trim();
+            const password = document.getElementById('password').value;
+            let valid = true;
+
+            if (!identifier) { showError('identifier', true); valid = false; } else showError('identifier', false);
+            if (!password) { showError('password', true); valid = false; } else showError('password', false);
+            if (!valid) return;
+
+            hideMessages();
+            setLoading('voter', true);
+
+            const isEmail = identifier.includes('@');
+            const payload = {
+                password,
+                ...(isEmail ? { email: identifier } : { username: identifier })
+            };
+
+            try {
+                const res = await fetch('http://localhost:8000/api/v1/voter/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Store token if needed
+                    if (data.data?.accessToken) {
+                        localStorage.setItem('voterToken', data.data.accessToken);
+                        localStorage.setItem('voterData', JSON.stringify(data.data.voter));
+                    }
+                    showSuccessBanner();
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+                } else {
+                    showErrorBanner(data.message || 'Invalid credentials. Please try again.');
+                }
+            } catch (err) {
+                showErrorBanner('Could not connect to server. Make sure your backend is running.');
+            } finally {
+                setLoading('voter', false);
+            }
+        }
+
+        async function loginAdmin() {
+            const username = document.getElementById('admin-username').value.trim();
+            const password = document.getElementById('admin-password').value;
+            let valid = true;
+
+            if (!username) { showError('admin-username', true); valid = false; } else showError('admin-username', false);
+            if (!password) { showError('admin-password', true); valid = false; } else showError('admin-password', false);
+            if (!valid) return;
+
+            hideMessages();
+            setLoading('admin', true);
+
+            try {
+                const res = await fetch('http://localhost:8000/api/v1/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.data?.accessAdminToken) {
+                        localStorage.setItem('adminToken', data.data.accessAdminToken);
+                    }
+                    showSuccessBanner();
+                    setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1200);
+                } else {
+                    showErrorBanner(data.message || 'Invalid admin credentials.');
+                }
+            } catch (err) {
+                showErrorBanner('Could not connect to server. Make sure your backend is running.');
+            } finally {
+                setLoading('admin', false);
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (activeTab === 'voter') loginVoter();
+                else loginAdmin();
+            }
+        });
+    </script>
+
+</body>
+
+</html>

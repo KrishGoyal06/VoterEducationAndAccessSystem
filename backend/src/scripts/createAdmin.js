@@ -25,3 +25,5 @@ export const createAdmin = async () => {
     await mongoose.disconnect();
   }
 };
+
+createAdmin();
