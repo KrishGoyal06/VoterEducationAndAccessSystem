@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — MatdaanSetu</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ink: #0f0e0c;
+            --paper: #f5f0e8;
+            --saffron: #e8650a;
+            --saffron-light: #f7b26a;
+            --green: #1a6b3c;
+            --green-light: #d4ede0;
+            --navy: #1a2340;
+            --muted: #7a7060;
+            --border: #d8d0c0;
+            --white: #ffffff;
+            --error: #c0392b;
+            --sidebar-w: 260px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #eeeae0;
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-w);
+            min-height: 100vh;
+            background: #0d1626;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 30%;
+            right: -50%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232, 101, 10, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .sidebar-logo {
+            padding: 1.75rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .logo-text span {
+            color: var(--saffron);
+        }
+
+        .logo-sub {
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .admin-badge-sidebar {
+            margin: 1rem 1.5rem;
+            padding: 0.5rem 0.875rem;
+            background: rgba(232, 101, 10, 0.12);
+            border: 1px solid rgba(232, 101, 10, 0.2);
+            border-radius: 4px;
+            font-size: 0.72rem;
+            color: var(--saffron-light);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 0.5rem 0.875rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            font-size: 0.63rem;
+            color: rgba(255, 255, 255, 0.18);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.75rem 0.625rem 0.4rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 0.875rem;
+            border-radius: 4px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.875rem;
+            font-weight: 400;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .nav-item.active {
+            background: rgba(232, 101, 10, 0.13);
+            color: var(--saffron-light);
+            border: 1px solid rgba(232, 101, 10, 0.18);
+        }
+
+        .nav-icon {
+            font-size: 0.95rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            padding: 1rem 0.875rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 0.875rem;
+            border-radius: 4px;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        .logout-btn:hover {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.08);
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: var(--paper);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .topbar-left h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .topbar-left p {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 0.1rem;
+        }
+
+        .admin-topbadge {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(26, 35, 64, 0.08);
+            color: var(--navy);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.4rem 0.875rem;
+            border-radius: 20px;
+            border: 1px solid rgba(26, 35, 64, 0.15);
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 2rem 2.5rem;
+            flex: 1;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+            animation: fadeUp 0.4s ease forwards;
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card.c1::after {
+            background: var(--saffron);
+        }
+
+        .stat-card.c2::after {
+            background: var(--green);
+        }
+
+        .stat-card.c3::after {
+            background: var(--navy);
+        }
+
+        .stat-card.c4::after {
+            background: #8b4513;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.875rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        /* SECTION CARD */
+        .section-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .section-card-body {
+            padding: 1.5rem;
+        }
+
+        /* FORMS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 2px;
+            background: var(--paper);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--ink);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+            appearance: none;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--saffron);
+            box-shadow: 0 0 0 3px rgba(232, 101, 10, 0.08);
+            background: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1.5px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--saffron);
+            border-color: var(--saffron);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c45508;
+            border-color: #c45508;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #a93226;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--border);
+            color: var(--muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--ink);
+            color: var(--ink);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            max-width: 320px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--green);
+        }
+
+        .toast.error {
+            background: var(--error);
+        }
+
+        /* TABLE */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: var(--paper);
+        }
+
+        .table-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+
+        .del-btn {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: 2px;
+            background: transparent;
+            border: 1px solid #fecaca;
+            color: var(--error);
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .del-btn:hover {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
+
+        /* TWO COL */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* EMPTY */
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            color: var(--muted);
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .empty-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 0.4rem;
+        }
+
+        .empty-sub {
+            font-size: 0.82rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* TRICOLOR */
+        .tricolor {
+            height: 3px;
+            background: linear-gradient(to right, #FF9933 33.33%, white 33.33% 66.66%, #138808 66.66%);
+            margin-bottom: 2rem;
+            border-radius: 2px;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner-inline {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 0.4rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="index.html" class="logo-text">Matdaan<span>Setu</span></a>
+            <div class="logo-sub">Admin Control Panel</div>
+        </div>
+
+        <div class="admin-badge-sidebar">🛡 Administrator</div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Dashboard</div>
+            <button class="nav-item active" onclick="showPage('overview', this)">
+                <span class="nav-icon">🏠</span> Overview
+            </button>
+
+            <div class="nav-section-label">Manage</div>
+            <button class="nav-item" onclick="showPage('constituency', this)">
+                <span class="nav-icon">🗺️</span> Constituencies
+            </button>
+            <button class="nav-item" onclick="showPage('polling', this)">
+                <span class="nav-icon">📍</span> Polling Stations
+            </button>
+            <button class="nav-item" onclick="showPage('candidates', this)">
+                <span class="nav-icon">👥</span> Candidates
+            </button>
+            <button class="nav-item" onclick="showPage('education', this)">
+                <span class="nav-icon">📚</span> Education
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="logout-btn" onclick="logout()">
+                <span class="nav-icon">🚪</span> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-left">
+                <h2 id="page-title">Overview</h2>
+                <p id="page-sub">Admin control panel</p>
+            </div>
+            <div class="admin-topbadge">🛡 Admin Session Active</div>
+        </div>
+
+        <div class="content">
+            <div class="tricolor"></div>
+
+            <!-- OVERVIEW -->
+            <div class="page-section active" id="page-overview">
+                <div class="stats-grid">
+                    <div class="stat-card c1">
+                        <div class="stat-icon">🗺️</div>
+                        <div class="stat-label">Constituencies</div>
+                        <div class="stat-value" id="count-constituency">—</div>
+                    </div>
+                    <div class="stat-card c2">
+                        <div class="stat-icon">📍</div>
+                        <div class="stat-label">Polling Stations</div>
+                        <div class="stat-value" id="count-polling">—</div>
+                    </div>
+                    <div class="stat-card c3">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-label">Candidates</div>
+                        <div class="stat-value" id="count-candidates">—</div>
+                    </div>
+                    <div class="stat-card c4">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-label">Education Items</div>
+                        <div class="stat-value" id="count-education">—</div>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">Recent Constituencies</div>
+                            <button class="btn btn-outline" style="padding:0.4rem 0.875rem;font-size:0.78rem;"
+                                onclick="showPage('constituency', null)">Manage →</button>
+                        </div>
+                        <div class="section-card-body" id="ov-constituencies">
+                            <div class="empty-state">
+                                <div class="empty-icon">⏳</div>
+                                <div class="empty-title">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">Quick Actions</div>
+                        </div>
+                        <div class="section-card-body">
+                            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                                <button class="btn btn-primary" onclick="showPage('constituency', null)"
+                                    style="text-align:left;display:flex;align-items:center;gap:0.5rem;">🗺️ Add New
+                                    Constituency</button>
+                                <button class="btn btn-primary" onclick="showPage('polling', null)"
+                                    style="text-align:left;display:flex;align-items:center;gap:0.5rem;">📍 Add Polling
+                                    Station</button>
+                                <button class="btn btn-primary" onclick="showPage('candidates', null)"
+                                    style="text-align:left;display:flex;align-items:center;gap:0.5rem;">👥 Add
+                                    Candidate</button>
+                                <button class="btn btn-primary" onclick="showPage('education', null)"
+                                    style="text-align:left;display:flex;align-items:center;gap:0.5rem;">📚 Publish
+                                    Education Content</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONSTITUENCY -->
+            <div class="page-section" id="page-constituency">
+                <div class="two-col">
+                    <!-- ADD FORM -->
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">Add Constituency</div>
+                        </div>
+                        <div class="section-card-body">
+                            <div class="form-group">
+                                <label>Constituency Name</label>
+                                <input type="text" id="c-name" placeholder="e.g. Ludhiana North">
+                            </div>
+                            <div class="form-group">
+                                <label>Block / Tehsil</label>
+                                <input type="text" id="c-block" placeholder="e.g. Jagraon">
+                            </div>
+                            <div class="form-group">
+                                <label>District</label>
+                                <input type="text" id="c-district" placeholder="e.g. Ludhiana">
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" id="c-state" placeholder="e.g. Punjab">
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" onclick="createConstituency()">
+                                    <span class="spinner-inline" id="sp-constituency"></span>
+                                    Add Constituency
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIST -->
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">All Constituencies</div>
+                            <button class="btn btn-outline" style="padding:0.4rem 0.875rem;font-size:0.78rem;"
+                                onclick="loadConstituencies()">Refresh</button>
+                        </div>
+                        <div class="section-card-body" id="constituency-list">
+                            <div class="empty-state">
+                                <div class="empty-icon">⏳</div>
+                                <div class="empty-title">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POLLING STATIONS -->
+            <div class="page-section" id="page-polling">
+                <div class="two-col">
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">Add Polling Station</div>
+                        </div>
+                        <div class="section-card-body">
+                            <div class="form-group">
+                                <label>Constituency</label>
+                                <select id="ps-constituency-select">
+                                    <option value="">Select constituency...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Station Name</label>
+                                <input type="text" id="ps-name" placeholder="e.g. Govt. High School, Sector 14">
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" id="ps-address" placeholder="Full address of polling station">
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Latitude</label>
+                                    <input type="number" id="ps-lat" placeholder="30.9010" step="any">
+                                </div>
+                                <div class="form-group">
+                                    <label>Longitude</label>
+                                    <input type="number" id="ps-lng" placeholder="75.8573" step="any">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" onclick="createPollingStation()">
+                                    <span class="spinner-inline" id="sp-polling"></span>
+                                    Add Station
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">All Polling Stations</div>
+                            <button class="btn btn-outline" style="padding:0.4rem 0.875rem;font-size:0.78rem;"
+                                onclick="loadPollingStations()">Refresh</button>
+                        </div>
+                        <div class="section-card-body" id="polling-list">
+                            <div class="empty-state">
+                                <div class="empty-icon">⏳</div>
+                                <div class="empty-title">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANDIDATES -->
+            <div class="page-section" id="page-candidates">
+                <div class="two-col">
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">Add Candidate</div>
+                        </div>
+                        <div class="section-card-body">
+                            <div class="form-group">
+                                <label>Constituency</label>
+                                <select id="cand-constituency-select">
+                                    <option value="">Select constituency...</option>
+                                </select>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="cand-name" placeholder="Candidate name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="cand-email" placeholder="candidate@email.com">
+                                </div>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Party</label>
+                                    <input type="text" id="cand-party" placeholder="Party name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" id="cand-address" placeholder="Candidate address">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" onclick="createCandidate()">
+                                    <span class="spinner-inline" id="sp-candidate"></span>
+                                    Add Candidate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">All Candidates</div>
+                            <button class="btn btn-outline" style="padding:0.4rem 0.875rem;font-size:0.78rem;"
+                                onclick="loadCandidates()">Refresh</button>
+                        </div>
+                        <div class="section-card-body" id="candidates-list">
+                            <div class="empty-state">
+                                <div class="empty-icon">⏳</div>
+                                <div class="empty-title">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EDUCATION -->
+            <div class="page-section" id="page-education">
+                <div class="two-col">
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">Publish Education Content</div>
+                        </div>
+                        <div class="section-card-body">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="edu-title" placeholder="e.g. How to Vote — Step by Step">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="edu-desc" placeholder="Write the educational content here..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Video URL (optional)</label>
+                                <input type="url" id="edu-video" placeholder="https://youtube.com/...">
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-primary" onclick="createEducation()">
+                                    <span class="spinner-inline" id="sp-education"></span>
+                                    Publish Content
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-card-header">
+                            <div class="section-card-title">Published Content</div>
+                            <button class="btn btn-outline" style="padding:0.4rem 0.875rem;font-size:0.78rem;"
+                                onclick="loadEducation()">Refresh</button>
+                        </div>
+                        <div class="section-card-body" id="education-list">
+                            <div class="empty-state">
+                                <div class="empty-icon">⏳</div>
+                                <div class="empty-title">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const BASE = 'http://localhost:8000/api/v1';
+        const token = localStorage.getItem('adminToken');
+
+        const pageTitles = {
+            overview: ['Overview', 'Admin control panel'],
+            constituency: ['Constituencies', 'Manage all constituencies'],
+            polling: ['Polling Stations', 'Manage polling booth locations'],
+            candidates: ['Candidates', 'Manage candidates by constituency'],
+            education: ['Education Content', 'Publish voter education resources'],
+        };
+
+        if (!token) window.location.href = 'login.html';
+
+        function showPage(name, btnEl) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`page-${name}`).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            const [title, sub] = pageTitles[name];
+            document.getElementById('page-title').textContent = title;
+            document.getElementById('page-sub').textContent = sub;
+            if (name === 'polling' || name === 'candidates') populateConstituencyDropdowns();
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = `toast ${type} show`;
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function setSpinner(id, show) {
+            document.getElementById(`sp-${id}`).style.display = show ? 'inline-block' : 'none';
+        }
+
+        async function adminFetch(url, options = {}) {
+            const res = await fetch(BASE + url, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    ...(options.headers || {}),
+                },
+                credentials: 'include',
+            });
+            if (res.status === 401) { logout(); return null; }
+            return res.json();
+        }
+
+        // ─── CONSTITUENCIES ───
+        let allConstituencies = [];
+
+        async function loadConstituencies() {
+            const data = await adminFetch('/constituency/all-constituency');
+            const list = document.getElementById('constituency-list');
+            const ov = document.getElementById('ov-constituencies');
+
+            if (!data?.data?.length) {
+                const empty = `<div class="empty-state"><div class="empty-icon">🗺️</div><div class="empty-title">No constituencies yet</div><div class="empty-sub">Add your first constituency using the form.</div></div>`;
+                list.innerHTML = empty;
+                ov.innerHTML = empty;
+                document.getElementById('count-constituency').textContent = '0';
+                allConstituencies = [];
+                return;
+            }
+
+            allConstituencies = data.data;
+            document.getElementById('count-constituency').textContent = allConstituencies.length;
+
+            const rows = allConstituencies.map(c => `
+      <tr>
+        <td><strong>${c.name}</strong></td>
+        <td>${c.block}</td>
+        <td>${c.district}</td>
+        <td>${c.state}</td>
+        <td><button class="del-btn" onclick="deleteConstituency('${c._id}')">Delete</button></td>
+      </tr>`).join('');
+
+            const table = `<table class="data-table"><thead><tr><th>Name</th><th>Block</th><th>District</th><th>State</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+            list.innerHTML = table;
+
+            const ovRows = allConstituencies.slice(0, 4).map(c => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:0.875rem;font-weight:500">${c.name}</div>
+          <div style="font-size:0.75rem;color:var(--muted)">${c.district}, ${c.state}</div>
+        </div>
+        <span class="table-badge" style="background:var(--green-light);color:var(--green)">${c.block}</span>
+      </div>`).join('');
+            ov.innerHTML = ovRows;
+
+            populateConstituencyDropdowns();
+        }
+
+        async function createConstituency() {
+            const name = document.getElementById('c-name').value.trim();
+            const block = document.getElementById('c-block').value.trim();
+            const district = document.getElementById('c-district').value.trim();
+            const state = document.getElementById('c-state').value.trim();
+
+            if (!name || !block || !district || !state) { showToast('Please fill all fields', 'error'); return; }
+
+            setSpinner('constituency', true);
+            const data = await adminFetch('/constituency/create', {
+                method: 'POST',
+                body: JSON.stringify({ name, block, district, state }),
+            });
+            setSpinner('constituency', false);
+
+            if (data?.data) {
+                showToast('Constituency added successfully!');
+                document.getElementById('c-name').value = '';
+                document.getElementById('c-block').value = '';
+                document.getElementById('c-district').value = '';
+                document.getElementById('c-state').value = '';
+                loadConstituencies();
+            } else {
+                showToast(data?.message || 'Failed to add constituency', 'error');
+            }
+        }
+
+        async function deleteConstituency(id) {
+            if (!confirm('Delete this constituency? This cannot be undone.')) return;
+            const data = await adminFetch(`/constituency/delete-constituency/${id}`, { method: 'DELETE' });
+            if (data?.data !== undefined) { showToast('Constituency deleted'); loadConstituencies(); }
+            else showToast(data?.message || 'Delete failed', 'error');
+        }
+
+        // ─── POLLING STATIONS ───
+        let allPollingStations = [];
+
+        function populateConstituencyDropdowns() {
+            ['ps-constituency-select', 'cand-constituency-select'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                const current = sel.value;
+                sel.innerHTML = '<option value="">Select constituency...</option>' +
+                    allConstituencies.map(c => `<option value="${c._id}">${c.name} — ${c.district}</option>`).join('');
+                sel.value = current;
+            });
+        }
+
+        async function loadPollingStations() {
+            const list = document.getElementById('polling-list');
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Loading...</div></div>';
+
+            if (!allConstituencies.length) { await loadConstituencies(); }
+
+            let all = [];
+            for (const c of allConstituencies.slice(0, 10)) {
+                try {
+                    const data = await adminFetch(`/polling-station/constituency/${c._id}`);
+                    if (data?.data?.length) all = [...all, ...data.data.map(p => ({ ...p, constituencyName: c.name }))];
+                } catch (e) { }
+            }
+
+            allPollingStations = all;
+            document.getElementById('count-polling').textContent = all.length;
+
+            if (!all.length) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">📍</div><div class="empty-title">No polling stations yet</div><div class="empty-sub">Add polling stations using the form.</div></div>';
+                return;
+            }
+
+            const rows = all.map(p => `
+      <tr>
+        <td><strong>${p.name}</strong></td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.address}</td>
+        <td>${p.constituencyName || '—'}</td>
+        <td style="font-size:0.78rem;color:var(--muted)">${p.latitude?.toFixed(4) || '—'}, ${p.longitude?.toFixed(4) || '—'}</td>
+        <td><button class="del-btn" onclick="deletePollingStation('${p._id}')">Delete</button></td>
+      </tr>`).join('');
+
+            list.innerHTML = `<table class="data-table"><thead><tr><th>Name</th><th>Address</th><th>Constituency</th><th>Coords</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+        }
+
+        async function createPollingStation() {
+            const constituencyId = document.getElementById('ps-constituency-select').value;
+            const name = document.getElementById('ps-name').value.trim();
+            const address = document.getElementById('ps-address').value.trim();
+            const latitude = parseFloat(document.getElementById('ps-lat').value);
+            const longitude = parseFloat(document.getElementById('ps-lng').value);
+
+            if (!constituencyId || !name || !address || isNaN(latitude) || isNaN(longitude)) {
+                showToast('Please fill all fields correctly', 'error'); return;
+            }
+
+            setSpinner('polling', true);
+            const data = await adminFetch(`/polling-station/create/${constituencyId}`, {
+                method: 'POST',
+                body: JSON.stringify({ name, address, latitude, longitude }),
+            });
+            setSpinner('polling', false);
+
+            if (data?.data) {
+                showToast('Polling station added!');
+                ['ps-name', 'ps-address', 'ps-lat', 'ps-lng'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('ps-constituency-select').value = '';
+                loadPollingStations();
+            } else {
+                showToast(data?.message || 'Failed to add polling station', 'error');
+            }
+        }
+
+        async function deletePollingStation(id) {
+            if (!confirm('Delete this polling station?')) return;
+            const data = await adminFetch(`/polling-station/${id}`, { method: 'DELETE' });
+            if (data?.data !== undefined) { showToast('Polling station deleted'); loadPollingStations(); }
+            else showToast(data?.message || 'Delete failed', 'error');
+        }
+
+        // ─── CANDIDATES ───
+        async function loadCandidates() {
+            const list = document.getElementById('candidates-list');
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Loading...</div></div>';
+
+            if (!allConstituencies.length) await loadConstituencies();
+
+            let all = [];
+            for (const c of allConstituencies.slice(0, 10)) {
+                try {
+                    const data = await adminFetch(`/candidate/constituency/${c._id}`);
+                    if (data?.data?.length) all = [...all, ...data.data.map(cand => ({ ...cand, constituencyName: c.name }))];
+                } catch (e) { }
+            }
+
+            document.getElementById('count-candidates').textContent = all.length;
+
+            if (!all.length) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">No candidates yet</div><div class="empty-sub">Add candidates using the form.</div></div>';
+                return;
+            }
+
+            const colors = ['#fff3e0', '#e8f5e9', '#e3f2fd', '#fce4ec', '#f3e5f5'];
+            const tc = ['#e8650a', '#1a6b3c', '#1565c0', '#c62828', '#6a1b9a'];
+
+            const rows = all.map((c, i) => `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div style="width:32px;height:32px;border-radius:50%;background:${colors[i % 5]};color:${tc[i % 5]};display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0">${getInitials(c.name)}</div>
+            <strong>${c.name}</strong>
+          </div>
+        </td>
+        <td><span class="table-badge" style="background:${colors[i % 5]};color:${tc[i % 5]}">${c.party || 'Independent'}</span></td>
+        <td>${c.constituencyName || '—'}</td>
+        <td><button class="del-btn" onclick="deleteCandidate('${c._id}')">Delete</button></td>
+      </tr>`).join('');
+
+            list.innerHTML = `<table class="data-table"><thead><tr><th>Name</th><th>Party</th><th>Constituency</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+        }
+
+        async function createCandidate() {
+            const constituencyId = document.getElementById('cand-constituency-select').value;
+            const name = document.getElementById('cand-name').value.trim();
+            const email = document.getElementById('cand-email').value.trim();
+            const party = document.getElementById('cand-party').value.trim();
+            const address = document.getElementById('cand-address').value.trim();
+
+            if (!constituencyId || !name || !email || !party || !address) {
+                showToast('Please fill all fields', 'error'); return;
+            }
+
+            setSpinner('candidate', true);
+            const data = await adminFetch('/candidate/create', {
+                method: 'POST',
+                body: JSON.stringify({ name, email, party, address, constituencyId }),
+            });
+            setSpinner('candidate', false);
+
+            if (data?.data) {
+                showToast('Candidate added successfully!');
+                ['cand-name', 'cand-email', 'cand-party', 'cand-address'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('cand-constituency-select').value = '';
+                loadCandidates();
+            } else {
+                showToast(data?.message || 'Failed to add candidate', 'error');
+            }
+        }
+
+        async function deleteCandidate(id) {
+            if (!confirm('Delete this candidate?')) return;
+            const data = await adminFetch(`/candidate/delete-candidate/${id}`, { method: 'DELETE' });
+            if (data?.data !== undefined) { showToast('Candidate deleted'); loadCandidates(); }
+            else showToast(data?.message || 'Delete failed', 'error');
+        }
+
+        // ─── EDUCATION ───
+        async function loadEducation() {
+            const list = document.getElementById('education-list');
+            const data = await adminFetch('/education/all-education');
+
+            document.getElementById('count-education').textContent = data?.data?.length || '0';
+
+            if (!data?.data?.length) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">No content yet</div><div class="empty-sub">Publish your first education resource.</div></div>';
+                return;
+            }
+
+            list.innerHTML = data.data.map(e => `
+      <div style="padding:1rem 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+          <div style="flex:1">
+            <div style="font-size:0.9rem;font-weight:500;margin-bottom:0.3rem">${e.title}</div>
+            <div style="font-size:0.8rem;color:var(--muted);font-weight:300;line-height:1.5">${e.description?.slice(0, 100) || ''}${e.description?.length > 100 ? '...' : ''}</div>
+          </div>
+          <button class="del-btn" onclick="deleteEducation('${e._id}')">Delete</button>
+        </div>
+      </div>`).join('');
+        }
+
+        async function createEducation() {
+            const title = document.getElementById('edu-title').value.trim();
+            const description = document.getElementById('edu-desc').value.trim();
+            const videoUrl = document.getElementById('edu-video').value.trim();
+
+            if (!title || !description) { showToast('Title and description are required', 'error'); return; }
+
+            setSpinner('education', true);
+            const data = await adminFetch('/education/create', {
+                method: 'POST',
+                body: JSON.stringify({ title, description, ...(videoUrl && { videoUrl }) }),
+            });
+            setSpinner('education', false);
+
+            if (data?.data) {
+                showToast('Content published!');
+                document.getElementById('edu-title').value = '';
+                document.getElementById('edu-desc').value = '';
+                document.getElementById('edu-video').value = '';
+                loadEducation();
+            } else {
+                showToast(data?.message || 'Failed to publish', 'error');
+            }
+        }
+
+        async function deleteEducation(id) {
+            if (!confirm('Delete this education content?')) return;
+            const data = await adminFetch(`/education/delete-education/${id}`, { method: 'DELETE' });
+            if (data?.data !== undefined) { showToast('Content deleted'); loadEducation(); }
+            else showToast(data?.message || 'Delete failed', 'error');
+        }
+
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        async function logout() {
+            try {
+                await fetch(BASE + '/admin/logout', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    credentials: 'include',
+                });
+            } catch (e) { }
+            localStorage.removeItem('adminToken');
+            window.location.href = 'login.html';
+        }
+
+        async function init() {
+            try { await loadConstituencies(); } catch (e) { console.log('No constituencies yet'); }
+            try { await loadEducation(); } catch (e) { console.log('No education yet'); }
+            // polling and candidates load on demand when tab is opened
+            document.getElementById('count-polling').textContent = '0';
+            document.getElementById('count-candidates').textContent = '0';
+        }
+
+        init();
+    </script>
+
+</body>
+
+</html>

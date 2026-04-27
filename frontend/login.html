@@ -830,11 +830,12 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    if (data.data?.accessAdminToken) {
-                        localStorage.setItem('adminToken', data.data.accessAdminToken);
+                    const token = data.data?.accessAdminToken || data.accessAdminToken
+                    if (token) {
+                        localStorage.setItem('adminToken', token)
                     }
-                    showSuccessBanner();
-                    setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1200);
+                    showSuccessBanner()
+                    setTimeout(() => { window.location.href = 'admin-dashboard.html' }, 5000)
                 } else {
                     showErrorBanner(data.message || 'Invalid admin credentials.');
                 }

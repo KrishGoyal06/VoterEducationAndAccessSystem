@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 import { Admin } from "../models/admin.model.js";
 import dotenv from "dotenv";
-
-dotenv.config();
+import { DB_NAME } from "../constants.js";
+dotenv.config({
+  path: "./.env",
+});
 
 export const createAdmin = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`);
     const existingAdmin = await Admin.findOne({
       username: process.env.ADMIN_USERNAME,
     });
